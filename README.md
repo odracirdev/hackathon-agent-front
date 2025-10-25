@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Hackathon Agent
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Plataforma B2B de gestión de inventario con agentes de inteligencia artificial (arquitectura multiagente).
 
-Currently, two official plugins are available:
+Este repo contiene la interfaz front-end (Vite + React + TypeScript) de un dashboard pensado para mostrar cómo los usuarios pueden visualizar y gestionar múltiples agentes IA y administrar su inventario con ayuda de estos agentes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🎯 Objetivo final
 
-## React Compiler
+- Mostrar de forma clara y atractiva cómo los usuarios visualizan y gestionan múltiples agentes IA.
+- Permitir interacciones conversacionales con los agentes desde el propio dashboard (chat por agente).
+- Administrar productos del inventario con soporte de IA (búsqueda, alertas, actualizaciones).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Contenido del proyecto
 
-## Expanding the ESLint configuration
+- `src/` — aplicación React/TypeScript.
+- `src/components/` — componentes UI y vistas (Sidebar, Topbar, AgentsView, ChatPanel, InventoryView, etc.).
+- `src/components/ui/` — biblioteca UI (componentes reusables, wrappers de Radix, utilidades).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Requisitos
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js: Se recomienda Node 22.x (o >= 20.19). Usa nvm/fnm/asdf para gestionar versiones localmente.
+- pnpm (el proyecto contiene `pnpm-lock.yaml`, por lo que recomendamos usar pnpm): https://pnpm.io/
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Instalación
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Instala la versión recomendada de Node (ejemplo con nvm):
+
+```bash
+nvm install 22
+nvm use 22
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Instala dependencias:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
+
+3. Arrancar en modo desarrollo:
+
+```bash
+pnpm run dev
+```
+
+4. Compilar para producción:
+
+```bash
+pnpm run build
+```
+
+Arquitectura y flujo
+
+- Frontend (Vite + React + TypeScript)
+  - Componentes principales:
+    - Sidebar: navegación entre vistas (Overview, Agents, Inventory, History, Settings).
+    - AgentsView: lista de agentes, métricas y tarjetas de agente (abrir chat / ver estado).
+    - ChatPanel: chat conversacional por agente.
+    - InventoryView: gestión de productos, búsquedas y acciones asistidas por IA.
+  - UI primitives: wrappers de Radix UI y utilidades (clsx, tailwind-merge, cva).
+
+- Integración IA
+  - Los componentes de UI están preparados para invocar servicios IA (backend). La integración real (llamadas a APIs, websocket, auth) queda en el backend y adaptadores.
+
+Cómo probar las interacciones IA (modo demo)
+
+1. Levanta el front con `pnpm run dev`.
+2. En `AgentsView` abre un agente y pulsa "Ver chat".
+3. El `ChatPanel` está preparado para conectar con un endpoint de mensajería — usa mocks o conecta con tu backend para ver mensajes.
