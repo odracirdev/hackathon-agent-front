@@ -1,9 +1,8 @@
 // biome-ignore assist/source/organizeImports: <explanation>
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Send, Mic } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ScrollArea } from "./ui/scroll-area";
 
 interface Message {
 	id: string;
@@ -52,6 +51,12 @@ export function ChatPanel({ isOpen, onClose, agentName }: ChatPanelProps) {
 		},
 	]);
 	const [inputValue, setInputValue] = useState("");
+
+	const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+	}, [messages]);
 
 	const handleSend = () => {
 		if (!inputValue.trim()) return;
@@ -102,9 +107,9 @@ export function ChatPanel({ isOpen, onClose, agentName }: ChatPanelProps) {
 				</Button>
 			</div>
 
-			{/* Messages */}
-			<ScrollArea className="flex-1 p-6">
-				<div className="space-y-4">
+			{/* Messages (scrollable) */}
+			<div className="flex-1 overflow-auto p-6">
+				<div className="flex flex-col space-y-4">
 					{messages.map((message) => (
 						<div
 							key={message.id}
@@ -130,8 +135,9 @@ export function ChatPanel({ isOpen, onClose, agentName }: ChatPanelProps) {
 							</div>
 						</div>
 					))}
+					<div ref={messagesEndRef} />
 				</div>
-			</ScrollArea>
+			</div>
 
 			{/* Input */}
 			<div className="p-6 border-t border-gray-200">
