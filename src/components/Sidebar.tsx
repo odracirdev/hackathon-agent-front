@@ -30,7 +30,7 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
 			<div className="p-6 border-b border-gray-200">
 				<div className="flex items-center gap-2">
 					<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-					<img src={ logo } alt="" />
+					<img className="rounded-lg" src={ logo } alt="" />
 					</div>
 					<div>
 						<div className="text-gray-900">AI Inventory</div>
