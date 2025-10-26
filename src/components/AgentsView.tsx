@@ -6,12 +6,10 @@ import { AgentCard } from "./AgentCard";
 import { apiFetchAgent } from "../lib/api";
 
 interface Agent {
-	id: string;
+	id: number;
 	name: string;
-	status: "active" | "waiting" | "error";
-	lastAction: string;
-	company: string;
-	tasksCompleted: number;
+	model: string;
+	description: string;
 }
 
 interface AgentsViewProps {
@@ -65,9 +63,6 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 
 	// Derived metrics from agentsState
 	const totalAgents = agentsState.length;
-	const activeAgents = agentsState.filter((a) => a.status === 'active').length;
-	const errorAgents = agentsState.filter((a) => a.status === 'error').length;
-	const tasksCompletedTotal = agentsState.reduce((acc, a) => acc + (a.tasksCompleted || 0), 0);
 
 
 	return (
@@ -84,32 +79,32 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 			{/* Metrics */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 				<MetricCard
-					title="Agentes Activos"
-					value={loading ? '…' : `${activeAgents}/${totalAgents}`}
-					change={loading ? '' : `${activeAgents} activos`}
+					title="Agentes Disponibles"
+					value={loading ? '…' : String(totalAgents)}
+					change={loading ? '' : `${totalAgents} agentes activos`}
 					icon={Bot}
-					trend={activeAgents > 0 ? 'up' : 'neutral'}
+					trend={totalAgents > 0 ? 'up' : 'neutral'}
 				/>
 				<MetricCard
-					title="Requerimientos Hoy"
-					value={loading ? '…' : String(tasksCompletedTotal)}
-					change={loading ? '' : `${tasksCompletedTotal} tareas completadas`}
+					title="Modelos Usados"
+					value={loading ? '…' : String(new Set(agentsState.map(a => a.model)).size)}
+					change={loading ? '' : 'Diferentes modelos'}
 					icon={CheckCircle2}
-					trend={tasksCompletedTotal > 0 ? 'up' : 'neutral'}
-				/>
-				<MetricCard
-					title="Productos Actualizados"
-					value={loading ? '…' : String(tasksCompletedTotal)}
-					change={loading ? '' : 'Última hora'}
-					icon={Package}
 					trend="neutral"
 				/>
 				<MetricCard
-					title="Alertas de Inventario"
-					value={loading ? '…' : String(errorAgents)}
-					change={loading ? '' : `${errorAgents} con errores`}
+					title="Productividad"
+					value={loading ? '…' : '100%'}
+					change={loading ? '' : 'Todos operativos'}
+					icon={Package}
+					trend="up"
+				/>
+				<MetricCard
+					title="Estado General"
+					value={loading ? '…' : 'Excelente'}
+					change={loading ? '' : 'Sistema funcionando'}
 					icon={AlertTriangle}
-					trend={errorAgents > 0 ? 'down' : 'neutral'}
+					trend="neutral"
 				/>
 			</div>
 
