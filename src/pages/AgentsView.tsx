@@ -1,8 +1,8 @@
 // biome-ignore assist/source/organizeImports: <explanation>
 import { useEffect, useState } from "react";
 import { Bot, CheckCircle2, Package, AlertTriangle } from "lucide-react";
-import { MetricCard } from "./MetricCard";
-import { AgentCard } from "./AgentCard";
+import { MetricCard } from "../components/MetricCard";
+import { AgentCard } from "../components/AgentCard";
 import { apiFetchAgent } from "../lib/api";
 
 interface Agent {

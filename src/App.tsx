@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
-import { AgentsView } from "./components/AgentsView";
-import { InventoryView } from "./components/InventoryView";
+import { AgentsView } from "./pages/AgentsView";
+import { InventoryView } from "./pages/InventoryView";
 import { ChatPanel } from "./components/ChatPanel";
 
 export default function App() {

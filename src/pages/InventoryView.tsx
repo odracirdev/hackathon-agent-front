@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import { apiFetchDetails } from "../lib/api";
 import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
 	Table,
 	TableBody,
@@ -12,8 +12,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-import { Badge } from "./ui/badge";
+} from "../components/ui/table";
+import { Badge } from "../components/ui/badge";
 
 interface Product {
 	id: number;
