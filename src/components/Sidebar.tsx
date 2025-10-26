@@ -58,7 +58,6 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
 							>
 								<Icon className="w-5 h-5" />
 								<span>{item.label}</span>
-								{isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
 							</button>
 						);
 					})}
