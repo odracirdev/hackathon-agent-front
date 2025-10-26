@@ -157,13 +157,17 @@ export function ChatPanel({ isOpen, onClose, agentName }: ChatPanelProps) {
 			const finalMessages = [...updatedMessages, assistantMessage];
 			setMessages(finalMessages);
 			
-			// Auto-play assistant response
+			// Auto-play assistant response with ElevenLabs
 			if (assistantContent) {
-				setTimeout(() => {
-					speakText(assistantContent);
+				setTimeout(async () => {
 					setIsSpeaking(true);
-					// Reset speaking state after estimated speech duration
-					setTimeout(() => setIsSpeaking(false), assistantContent.length * 50);
+					try {
+						await speakText(assistantContent);
+					} catch (error) {
+						console.error('Error al reproducir audio:', error);
+					} finally {
+						setIsSpeaking(false);
+					}
 				}, 300); // Small delay to ensure message is rendered
 			}
 		} catch (err) {
@@ -198,15 +202,19 @@ export function ChatPanel({ isOpen, onClose, agentName }: ChatPanelProps) {
 		}
 	};
 
-	const handleSpeakMessage = (text: string) => {
+	const handleSpeakMessage = async (text: string) => {
 		if (isSpeaking) {
 			stopSpeaking();
 			setIsSpeaking(false);
 		} else {
 			setIsSpeaking(true);
-			speakText(text);
-			// Reset speaking state after speech ends
-			setTimeout(() => setIsSpeaking(false), text.length * 50); // Rough estimate
+			try {
+				await speakText(text);
+			} catch (error) {
+				console.error('Error al reproducir audio:', error);
+			} finally {
+				setIsSpeaking(false);
+			}
 		}
 	};
 
