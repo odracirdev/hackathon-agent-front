@@ -1,7 +1,9 @@
 // biome-ignore assist/source/organizeImports: <explanation>
+import { useEffect, useState } from "react";
 import { Bot, CheckCircle2, Package, AlertTriangle } from "lucide-react";
 import { MetricCard } from "./MetricCard";
 import { AgentCard } from "./AgentCard";
+import { apiFetch } from "../lib/api";
 
 interface Agent {
 	id: string;
@@ -16,42 +18,37 @@ interface AgentsViewProps {
 	onOpenChat: (agentName: string) => void;
 }
 
-const agents: Agent[] = [
-	{
-		id: "1",
-		name: "Agente Principal",
-		status: "active",
-		lastAction: "Actualización de stock",
-		company: "TechCorp S.A.",
-		tasksCompleted: 156,
-	},
-	{
-		id: "2",
-		name: "Agente de Análisis",
-		status: "active",
-		lastAction: "Generación de reporte",
-		company: "TechCorp S.A.",
-		tasksCompleted: 89,
-	},
-	{
-		id: "3",
-		name: "Agente de Alertas",
-		status: "waiting",
-		lastAction: "Monitoreo de stock bajo",
-		company: "TechCorp S.A.",
-		tasksCompleted: 234,
-	},
-	{
-		id: "4",
-		name: "Agente de Pedidos",
-		status: "active",
-		lastAction: "Procesamiento de orden",
-		company: "TechCorp S.A.",
-		tasksCompleted: 67,
-	},
-];
-
 export function AgentsView({ onOpenChat }: AgentsViewProps) {
+	const [agentsState, setAgentsState] = useState<Agent[]>([]);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		let mounted = true;
+		setLoading(true);
+		apiFetch<Agent[]>('/agents')
+			.then((data: Agent[]) => {
+				if (!mounted) return;
+				setAgentsState(Array.isArray(data) ? data : []);
+			})
+			.catch((err: unknown) => {
+				console.error('Failed to load agents', err);
+				if (!mounted) return;
+				const message = err && typeof err === 'object' && 'message' in err ? (err as any).message : String(err);
+				setError(String(message));
+			})
+			.finally(() => {
+				if (!mounted) return;
+				setLoading(false);
+			});
+
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
+	const agentsToRender = agentsState;
+
 	return (
 		<div className="p-8">
 			<div className="mb-8">
@@ -100,19 +97,25 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 				<div className="flex items-center justify-between mb-6">
 					<h2 className="text-gray-900">Agentes Disponibles</h2>
 					<div className="text-sm text-gray-500">
-						Actualizado hace 2 minutos
+						{loading ? 'Cargando agentes...' : error ? `Error: ${error}` : 'Actualizado hace 2 minutos'}
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-					{agents.map((agent) => (
-						<AgentCard
-							key={agent.id}
-							{...agent}
-							onOpenChat={() => onOpenChat(agent.name)}
-						/>
-					))}
-				</div>
+				{agentsToRender.length > 0 ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						{agentsToRender.map((agent: Agent) => (
+							<AgentCard
+								key={agent.id}
+								{...agent}
+								onOpenChat={() => onOpenChat(agent.name)}
+							/>
+						))}
+					</div>
+				) : (
+					<div className="rounded-lg border border-dashed border-gray-200 p-8 text-center text-sm text-gray-500">
+						{loading ? 'Cargando agentes...' : error ? `Error cargando agentes: ${error}` : 'No se encontraron agentes.'}
+					</div>
+				)}
 			</div>
 		</div>
 	);

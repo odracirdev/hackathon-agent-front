@@ -1,5 +1,6 @@
 // biome-ignore assist/source/organizeImports: <explanation>
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiFetch2 } from "../lib/api";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -22,76 +23,43 @@ interface Product {
 	lastUpdate: string;
 }
 
-const initialProducts: Product[] = [
-	{
-		id: "1",
-		name: "Laptop Dell XPS 15",
-		category: "Electrónica",
-		stock: 45,
-		price: 1299.99,
-		lastUpdate: "2025-10-25 09:30",
-	},
-	{
-		id: "2",
-		name: "iPhone 15 Pro",
-		category: "Electrónica",
-		stock: 12,
-		price: 999.99,
-		lastUpdate: "2025-10-25 10:15",
-	},
-	{
-		id: "3",
-		name: 'Monitor LG 27" 4K',
-		category: "Electrónica",
-		stock: 28,
-		price: 449.99,
-		lastUpdate: "2025-10-24 16:20",
-	},
-	{
-		id: "4",
-		name: "Teclado Mecánico Logitech",
-		category: "Accesorios",
-		stock: 67,
-		price: 129.99,
-		lastUpdate: "2025-10-25 08:45",
-	},
-	{
-		id: "5",
-		name: "Mouse Inalámbrico MX Master",
-		category: "Accesorios",
-		stock: 89,
-		price: 99.99,
-		lastUpdate: "2025-10-25 11:00",
-	},
-	{
-		id: "6",
-		name: "Auriculares Sony WH-1000XM5",
-		category: "Audio",
-		stock: 34,
-		price: 349.99,
-		lastUpdate: "2025-10-24 14:30",
-	},
-	{
-		id: "7",
-		name: "SSD Samsung 1TB",
-		category: "Almacenamiento",
-		stock: 156,
-		price: 89.99,
-		lastUpdate: "2025-10-25 07:15",
-	},
-	{
-		id: "8",
-		name: "Webcam Logitech C920",
-		category: "Accesorios",
-		stock: 8,
-		price: 79.99,
-		lastUpdate: "2025-10-23 13:45",
-	},
-];
 
 export function InventoryView() {
-	const [products] = useState<Product[]>(initialProducts);
+	// products will be loaded from the "second" API (VITE_SECOND_API_BASE)
+	// No local mock data: the view depends exclusively on the API.
+	const [products, setProducts] = useState<Product[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 	const [searchTerm, setSearchTerm] = useState("");
+
+	useEffect(() => {
+		let mounted = true;
+		setLoading(true);
+		setError(null);
+
+		// Assumption: the second API exposes a products endpoint at /products
+		// If your backend uses a different path (e.g. /inventory), change it here.
+		apiFetch2<Product[]>('/products')
+			.then((data) => {
+				if (!mounted) return;
+				// Accept empty arrays from the API (renders as empty state)
+				setProducts(Array.isArray(data) ? data : []);
+			})
+			.catch((err) => {
+				if (!mounted) return;
+				setError(err?.message || 'Error al cargar productos');
+				// keep products empty on error
+				setProducts([]);
+			})
+			.finally(() => {
+				if (!mounted) return;
+				setLoading(false);
+			});
+
+		return () => {
+			mounted = false;
+		};
+	}, []);
 
 	const filteredProducts = products.filter(
 		(product) =>
@@ -123,6 +91,12 @@ export function InventoryView() {
 			</div>
 
 			{/* Actions Bar */}
+			{loading && (
+				<div className="mb-4 text-sm text-gray-600">Cargando productos...</div>
+			)}
+			{error && (
+				<div className="mb-4 text-sm text-red-600">Error: {error}</div>
+			)}
 			<div className="flex items-center justify-between mb-6">
 				<div className="flex items-center gap-4 flex-1 max-w-md">
 					<div className="relative flex-1">
