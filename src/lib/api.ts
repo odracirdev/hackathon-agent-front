@@ -22,7 +22,7 @@ export const apiAgent: AxiosInstance = axios.create({
   },
 });
 
-export async function apiFetch<T = any>(path: string, config: AxiosRequestConfig = {}) {
+export async function apiFetchAgent<T = any>(path: string, config: AxiosRequestConfig = {}) {
   const url = path;
   try {
     const res = await apiAgent.request<T>({ url, ...config });
@@ -41,8 +41,8 @@ export async function apiFetch<T = any>(path: string, config: AxiosRequestConfig
 export { API_AGENT };
 
 // ---- Second API client (optional) ----
-// Use VITE_SECOND_API_BASE to point to the second backend.
-// Example in .env: VITE_SECOND_API_BASE=https://api-2.example.com/api
+// Use VITE_API_DETAILS to point to the inventory backend.
+// Example in .env: VITE_API_DETAILS=https://api-2.example.com/api
 const API_DETAILS = (import.meta as any).env?.VITE_API_DETAILS || '';
 
 export const apiDetails: AxiosInstance = axios.create({
@@ -53,7 +53,7 @@ export const apiDetails: AxiosInstance = axios.create({
   },
 });
 
-export async function apiFetch2<T = any>(path: string, config: AxiosRequestConfig = {}) {
+export async function apiFetchDetails<T = any>(path: string, config: AxiosRequestConfig = {}) {
   const url = path;
   try {
     const res = await apiDetails.request<T>({ url, ...config });

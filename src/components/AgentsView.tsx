@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Bot, CheckCircle2, Package, AlertTriangle } from "lucide-react";
 import { MetricCard } from "./MetricCard";
 import { AgentCard } from "./AgentCard";
-import { apiFetch } from "../lib/api";
+import { apiFetchAgent } from "../lib/api";
 
 interface Agent {
 	id: string;
@@ -26,13 +26,27 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 	useEffect(() => {
 		let mounted = true;
 		setLoading(true);
-		apiFetch<Agent[]>('/agents')
+		apiFetchAgent<Agent[]>('/agents')
 			.then((data: Agent[]) => {
 				if (!mounted) return;
-				setAgentsState(Array.isArray(data) ? data : []);
+				// Check if response is wrapped in an object
+				let agents = data;
+				if (data && typeof data === 'object' && !Array.isArray(data)) {
+					// Try common wrapper properties
+					if ((data as any).data && Array.isArray((data as any).data)) {
+						agents = (data as any).data;
+					} else if ((data as any).agents && Array.isArray((data as any).agents)) {
+						agents = (data as any).agents;
+					} else if ((data as any).result && Array.isArray((data as any).result)) {
+						agents = (data as any).result;
+					}
+				}
+				
+				const finalAgents = Array.isArray(agents) ? agents : [];
+				setAgentsState(finalAgents);
 			})
 			.catch((err: unknown) => {
-				console.error('Failed to load agents', err);
+				console.error('[AgentsView] Failed to load agents', err);
 				if (!mounted) return;
 				const message = err && typeof err === 'object' && 'message' in err ? (err as any).message : String(err);
 				setError(String(message));
