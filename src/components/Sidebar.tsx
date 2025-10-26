@@ -1,11 +1,11 @@
 // biome-ignore assist/source/organizeImports: <explanation>
 import {
-	Home,
+	// Home,
 	Bot,
 	Package,
-	History,
-	Settings,
-	ChevronRight,
+	// History,
+	// Settings,
+	// ChevronRight,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -16,11 +16,11 @@ interface SidebarProps {
 
 export function Sidebar({ activeView, onNavigate }: SidebarProps) {
 	const menuItems = [
-		{ id: "overview", label: "Overview", icon: Home },
+		// { id: "overview", label: "Overview", icon: Home },
 		{ id: "agents", label: "Agentes IA", icon: Bot },
 		{ id: "inventory", label: "Inventario", icon: Package },
-		{ id: "history", label: "Historial", icon: History },
-		{ id: "settings", label: "Configuración", icon: Settings },
+		// { id: "history", label: "Historial", icon: History },
+		// { id: "settings", label: "Configuración", icon: Settings },
 	];
 
 	return (
@@ -74,7 +74,7 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
 						</AvatarFallback>
 					</Avatar>
 					<div className="flex-1">
-						<div className="text-sm text-gray-900">TechCorp S.A.</div>
+						<div className="text-sm text-gray-900">UXCorp Rangel</div>
 						<div className="text-xs text-gray-500">Premium Plan</div>
 					</div>
 				</div>

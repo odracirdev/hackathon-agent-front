@@ -19,16 +19,16 @@ export default function App() {
 
 	const renderView = () => {
 		switch (activeView) {
-			case "overview":
-				return <OverviewPlaceholder />;
+			// case "overview":
+			// 	return <OverviewPlaceholder />;
 			case "agents":
 				return <AgentsView onOpenChat={handleOpenChat} />;
 			case "inventory":
 				return <InventoryView />;
-			case "history":
-				return <HistoryPlaceholder />;
-			case "settings":
-				return <SettingsPlaceholder />;
+			// case "history":
+			// 	return <HistoryPlaceholder />;
+			// case "settings":
+			// 	return <SettingsPlaceholder />;
 			default:
 				return <AgentsView onOpenChat={handleOpenChat} />;
 		}
