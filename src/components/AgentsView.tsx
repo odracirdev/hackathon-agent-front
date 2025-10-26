@@ -49,6 +49,13 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 
 	const agentsToRender = agentsState;
 
+	// Derived metrics from agentsState
+	const totalAgents = agentsState.length;
+	const activeAgents = agentsState.filter((a) => a.status === 'active').length;
+	const errorAgents = agentsState.filter((a) => a.status === 'error').length;
+	const tasksCompletedTotal = agentsState.reduce((acc, a) => acc + (a.tasksCompleted || 0), 0);
+
+
 	return (
 		<div className="p-8">
 			<div className="mb-8">
@@ -64,31 +71,31 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 				<MetricCard
 					title="Agentes Activos"
-					value="3/4"
-					change="+1 desde ayer"
+					value={loading ? '…' : `${activeAgents}/${totalAgents}`}
+					change={loading ? '' : `${activeAgents} activos`}
 					icon={Bot}
-					trend="up"
+					trend={activeAgents > 0 ? 'up' : 'neutral'}
 				/>
 				<MetricCard
 					title="Requerimientos Hoy"
-					value="127"
-					change="+23% vs ayer"
+					value={loading ? '…' : String(tasksCompletedTotal)}
+					change={loading ? '' : `${tasksCompletedTotal} tareas completadas`}
 					icon={CheckCircle2}
-					trend="up"
+					trend={tasksCompletedTotal > 0 ? 'up' : 'neutral'}
 				/>
 				<MetricCard
 					title="Productos Actualizados"
-					value="45"
-					change="En las últimas 2h"
+					value={loading ? '…' : String(tasksCompletedTotal)}
+					change={loading ? '' : 'Última hora'}
 					icon={Package}
 					trend="neutral"
 				/>
 				<MetricCard
 					title="Alertas de Inventario"
-					value="8"
-					change="Requieren atención"
+					value={loading ? '…' : String(errorAgents)}
+					change={loading ? '' : `${errorAgents} con errores`}
 					icon={AlertTriangle}
-					trend="down"
+					trend={errorAgents > 0 ? 'down' : 'neutral'}
 				/>
 			</div>
 
