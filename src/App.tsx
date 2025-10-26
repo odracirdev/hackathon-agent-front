@@ -1,48 +1,18 @@
 // biome-ignore assist/source/organizeImports: <explanation>
-import { useState } from "react";
-import { Sidebar } from "./components/Sidebar";
-import { Topbar } from "./components/Topbar";
-import { AgentsView } from "./pages/AgentsView";
-import { InventoryView } from "./pages/InventoryView";
-import { ChatPanel } from "./components/ChatPanel";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 
 export default function App() {
-	const [activeView, setActiveView] = useState("agents");
-	const [isChatOpen, setIsChatOpen] = useState(false);
-	const [selectedAgent, setSelectedAgent] = useState("");
+  // Minimal router landing page: redirect root path to /agents.
+  const location = useLocation();
+  const navigate = useNavigate();
 
-	const handleOpenChat = (agentName: string) => {
-		setSelectedAgent(agentName);
-		setIsChatOpen(true);
-	};
+  useEffect(() => {
+	if (location.pathname === "/") {
+	  navigate("/agents", { replace: true });
+	}
+  }, [location.pathname, navigate]);
 
-	const renderView = () => {
-		switch (activeView) {
-			case "agents":
-				return <AgentsView onOpenChat={handleOpenChat} />;
-			case "inventory":
-				return <InventoryView />;
-			default:
-				return <AgentsView onOpenChat={handleOpenChat} />;
-		}
-	};
-
-	return (
-		<div className="flex h-screen bg-gray-50">
-			<Sidebar activeView={activeView} onNavigate={setActiveView} />
-
-			<div className="flex-1 flex flex-col overflow-hidden">
-				<Topbar />
-
-				<main className="flex-1 overflow-auto">{renderView()}</main>
-			</div>
-
-			<ChatPanel
-				isOpen={isChatOpen}
-				onClose={() => setIsChatOpen(false)}
-				agentName={selectedAgent}
-			/>
-		</div>
-	);
+  return null;
 }
 
