@@ -1,7 +1,7 @@
 // biome-ignore assist/source/organizeImports: <explanation>
-import { Bell, Settings } from "lucide-react";
+// import { Bell, Settings } from "lucide-react";
 import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+// import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 export function Topbar() {
@@ -10,13 +10,13 @@ export function Topbar() {
 			<div className="flex items-center gap-4">
 				<div>
 					<div className="flex items-center gap-2">
-						<span className="text-gray-900">Carlos Mendez</span>
+						<span className="text-gray-900">Pepito Perez</span>
 						<Badge variant="outline" className="text-xs">
 							Admin
 						</Badge>
 					</div>
 					<div className="text-sm text-gray-500">
-						carlos.mendez@techcorp.com
+						pepito.perez@uxcorp.com
 					</div>
 				</div>
 			</div>
@@ -30,21 +30,21 @@ export function Topbar() {
 					</div>
 				</div>
 
-				{/* Notifications */}
+				{/* Notifications
 				<Button variant="ghost" size="icon" className="relative">
 					<Bell className="w-5 h-5" />
 					<span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-				</Button>
+				</Button> */}
 
-				{/* Settings */}
+				{/* Settings
 				<Button variant="ghost" size="icon">
 					<Settings className="w-5 h-5" />
-				</Button>
+				</Button> */}
 
 				{/* User Avatar */}
 				<Avatar>
 					<AvatarFallback className="bg-blue-100 text-blue-600">
-						CM
+						PP
 					</AvatarFallback>
 				</Avatar>
 			</div>
