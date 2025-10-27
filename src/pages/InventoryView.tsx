@@ -1,10 +1,11 @@
 // biome-ignore assist/source/organizeImports: <explanation>
 import { useEffect, useState } from "react";
+import Layout from "../components/Layout";
 import { apiFetchDetails } from "../lib/api";
 import { Plus, Pencil, Trash2, Search, X } from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import {
 	Table,
 	TableBody,
@@ -12,8 +13,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-import { Badge } from "./ui/badge";
+} from "../components/ui/table";
+import { Badge } from "../components/ui/badge";
 
 interface Product {
 	id: number;
@@ -159,7 +160,8 @@ export function InventoryView() {
 	};
 
 	return (
-		<div className="p-8">
+		<Layout>
+			<div className="p-8">
 			<div className="mb-8">
 				<h1 className="text-gray-900 mb-2">Gestión de Inventario</h1>
 				<p className="text-gray-600">
@@ -385,6 +387,7 @@ export function InventoryView() {
 					{products.reduce((acc, p) => acc + p.stock, 0)}
 				</div>
 			</div>
-		</div>
+			</div>
+		</Layout>
 	);
 }

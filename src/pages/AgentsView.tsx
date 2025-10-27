@@ -1,8 +1,10 @@
 // biome-ignore assist/source/organizeImports: <explanation>
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { ChatContext } from "../components/Layout";
+import Layout from "../components/Layout";
 import { Bot, CheckCircle2, Package, AlertTriangle } from "lucide-react";
-import { MetricCard } from "./MetricCard";
-import { AgentCard } from "./AgentCard";
+import { MetricCard } from "../components/MetricCard";
+import { AgentCard } from "../components/AgentCard";
 import { apiFetchAgent } from "../lib/api";
 
 interface Agent {
@@ -16,7 +18,7 @@ interface Agent {
 }
 
 interface AgentsViewProps {
-	onOpenChat: (agentName: string) => void;
+	onOpenChat?: (agentName: string) => void;
 }
 
 export function AgentsView({ onOpenChat }: AgentsViewProps) {
@@ -86,9 +88,17 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 	const activeAgents = agentsState.filter((a) => a.status === 'active').length;
 	const tasksCompletedTotal = agentsState.reduce((acc, a) => acc + (a.tasksCompleted || 0), 0);
 
+	// Chat handler from Layout context (fallback) or prop
+	const chat = useContext(ChatContext);
+	const openChat = (agentName: string) => {
+		if (onOpenChat) return onOpenChat(agentName);
+		return chat?.openChat(agentName);
+	};
+
 
 	return (
-		<div className="p-8">
+		<Layout>
+			<div className="p-8">
 			<div className="mb-8">
 				<h1 className="text-gray-900 mb-2">
 					Agentes de Inteligencia Artificial
@@ -145,7 +155,7 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 							<AgentCard
 								key={agent.id}
 								{...agent}
-								onOpenChat={() => onOpenChat(agent.name)}
+								onOpenChat={() => openChat(agent.name)}
 							/>
 						))}
 					</div>
@@ -155,6 +165,7 @@ export function AgentsView({ onOpenChat }: AgentsViewProps) {
 					</div>
 				)}
 			</div>
-		</div>
+			</div>
+		</Layout>
 	);
 }

@@ -3,10 +3,13 @@ import {
 	// Home,
 	Bot,
 	Package,
+	MessageSquare,
 	// History,
 	// Settings,
 	// ChevronRight,
 } from "lucide-react";
+import { useContext } from "react";
+import { ChatContext } from "./Layout";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import logo from "/img/logo-aiinventory.png";
 
@@ -16,6 +19,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeView, onNavigate }: SidebarProps) {
+	const chat = useContext(ChatContext);
 	const menuItems = [
 		// { id: "overview", label: "Overview", icon: Home },
 		{ id: "agents", label: "Agentes IA", icon: Bot },
@@ -64,6 +68,19 @@ export function Sidebar({ activeView, onNavigate }: SidebarProps) {
 					})}
 				</div>
 			</nav>
+
+			{/* Quick actions */}
+				<div className="p-4 border-t border-gray-200">
+					<button
+						className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-50"
+						onClick={() => {
+							if (chat?.toggleChat) chat.toggleChat();
+						}}
+					>
+						<MessageSquare className="w-5 h-5" />
+						<span>Abrir Chat</span>
+					</button>
+				</div>
 
 			{/* User Info */}
 			<div className="p-4 border-t border-gray-200">
